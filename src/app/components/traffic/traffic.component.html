@@ -1,0 +1,23 @@
+<div class="flex flex-col justify-center items-center rounded bg-neutral-50 flex-none"
+  [ngClass]="{
+  'opacity-50': !traffic.owner.isOwner,
+  'bg-red-400': traffic.isWaiting
+  }">
+  <p class="font-thin text-2xl">#{{traffic.id}}</p>
+  <p class="font-thin">{{traffic.startTime | date:'HH:mm'}}</p>
+  <div class="flex gap-2 p-2">
+    @if (traffic.isWaiting) {
+    <button class="btn btn-info btn-sm" (click)="updateTraffic()">
+      O
+    </button>
+    }
+    @else {
+    <button class="btn btn-success btn-sm" (click)="saveAndDeleteTraffic()">
+      ✓
+    </button>
+    }
+    <button class="btn btn-error btn-sm" (click)="deleteTraffic()">
+      X
+    </button>
+  </div>
+</div>
