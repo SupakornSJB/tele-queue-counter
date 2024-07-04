@@ -30,7 +30,6 @@ export class ServerService {
   }
 
   onCreateServer(info: CreateServerBroadcastResponse) {
-    console.table(info);
     this._servers.set(info.id, { name: info.name, startTime: info.startTime });
     this.servers.next(this.convertServerToArray());
   }
@@ -41,9 +40,7 @@ export class ServerService {
   }
 
   onSync(info: SyncAllDataResponse) {
-    console.log("server: on sync")
     this._servers = this.convertArrayToServer(info.servers);
-    console.log(this._servers);
     this.servers.next(info.servers);
   }
 

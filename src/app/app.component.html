@@ -4,13 +4,13 @@
       QCounter
     </p>
     <button class="btn btn-neutral" (click)="this.showCreateServerModal()">
-      New Server
+      Create Server
     </button>
   </nav>
   <div class="h-4/5 bg-neutral flex">
     @for (server of this.serverService.servers | async; track server.id) {
     <div class="border border-white h-full" [ngClass]="{
-      'basis-full': this.serverService.servers.value.length == 1,
+      'basis-full': this.serverService.servers.value.length==1,
       'basis-1/2' : this.serverService.servers.value.length==2,
       'basis-1/3' : this.serverService.servers.value.length==3,
       'basis-1/4' : this.serverService.servers.value.length==4,
@@ -23,15 +23,18 @@
   </div>
 </div>
 
-<dialog id="my_modal_1" class="modal">
+<dialog id="main_modal" class="modal">
   <div class="modal-box">
-    <h3 class="font-bold text-2xl" id="title">Hello!</h3>
-    <p class="py-4" id="content">Press ESC key or click the button below to close</p>
-    <input type="text" class="input input-bordered w-full" id="input">
+    <h3 class="font-bold text-2xl">{{modalTitle}}</h3>
+    <p class="py-4">{{modalDescription}}</p>
+    <input type="text" class="input input-bordered w-full" [(ngModel)]="modalInput">
     <div class="modal-action">
       <form method="dialog">
         <!-- if there is a button in form, it will close the modal -->
-        <button class="btn" id="confirmButton">Confirm</button>
+        <button class="btn btn-primary" (click)="createCallback()">{{modalButtonText}}</button>
+        @if (!isCreatingUser) {
+        <button class="btn btn-error">Cancel</button>
+        }
       </form>
     </div>
   </div>

@@ -1,6 +1,15 @@
 import { Injectable } from '@angular/core';
 import { SocketService } from './socket.service';
-import { CreateTrafficBroadcastResponse, CreateTrafficRequest, DeleteTrafficBroadcastResponse, DeleteTrafficRequest, ITrafficPublic, SaveAndDeleteTrafficRequest, UpdateTrafficBroadcastResponse, UpdateTrafficRequest } from '../interfaces/traffic';
+import {
+  CreateTrafficBroadcastResponse,
+  CreateTrafficRequest,
+  DeleteTrafficBroadcastResponse,
+  DeleteTrafficRequest,
+  ITrafficPublic,
+  SaveAndDeleteTrafficRequest,
+  UpdateTrafficBroadcastResponse,
+  UpdateTrafficRequest
+} from '../interfaces/traffic';
 import { BehaviorSubject } from 'rxjs';
 import { SyncAllDataResponse } from '../interfaces/user';
 
@@ -56,9 +65,7 @@ export class TrafficService {
   }
 
   onSync(info: SyncAllDataResponse) {
-    console.log("traffic: on sync");
     this._traffics = this.convertArrayToTraffic(info.traffics);
-    console.log(this._traffics);
     this.traffics.next(info.traffics);
   }
 
@@ -71,7 +78,6 @@ export class TrafficService {
     trafficList.forEach((traffic) => {
       newMap.set(traffic.id, { serverId: traffic.serverId, startTime: traffic.startTime, note: traffic.note, owner: traffic.owner, isWaiting: traffic.isWaiting })
     })
-
     return newMap;
   }
 }

@@ -5,7 +5,6 @@ import { ServerComponent } from './components/server/server.component';
 import { TrafficComponent } from './components/traffic/traffic.component';
 import { FormsModule } from "@angular/forms"
 import { ServerService } from './services/server.service';
-import { ModalService } from './services/modal.service';
 import { UserService } from './services/user.service';
 import { SocketService } from './services/socket.service';
 import { TrafficService } from './services/traffic.service';
@@ -18,19 +17,41 @@ import { TrafficService } from './services/traffic.service';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
+  public modalInput: string;
+  public modalTitle: string;
+  public modalDescription: string;
+  public modalButtonText: string;
+  public isCreatingUser: boolean = true;
+  public createCallback: () => void;
+
   constructor(public serverService: ServerService,
-              public modalService: ModalService,
-              public userService: UserService,
-              public socketService: SocketService,
-              public trafficService: TrafficService) {
+    public userService: UserService,
+    public socketService: SocketService,
+    public trafficService: TrafficService) {
     this.socketService.isReady.subscribe((v) => { v && this.showCreateUserModal() });
   }
 
   showCreateServerModal() {
-    this.modalService.showModal("Create Server", "Please enter the name of the server", (name: string) => this.serverService.createServer({ name }));
+    const modal = document.getElementById("main_modal") as HTMLDialogElement;
+    this.isCreatingUser = false;
+    this.modalTitle = "Create New Server";
+    this.modalDescription = "Please Enter the Name for the New Server";
+    this.modalButtonText = "Create Server";
+    this.createCallback = () => {
+      this.serverService.createServer({ name: this.modalInput });
+    }
+    modal.showModal();
   }
 
   showCreateUserModal() {
-    this.modalService.showModal("Create User", "Please enter your name", (name: string) => this.userService.createUser({ name, color: "FFFFFF" }));
+    const modal = document.getElementById("main_modal") as HTMLDialogElement;
+    this.isCreatingUser = true;
+    this.modalTitle = "Create User";
+    this.modalDescription = "Please Enter Your Name";
+    this.modalButtonText = "Confirm";
+    this.createCallback = () => {
+      this.userService.createUser({ name: this.modalInput, color: "#000000" });
+    }
+    modal.showModal();
   }
 }

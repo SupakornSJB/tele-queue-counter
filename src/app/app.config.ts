@@ -4,6 +4,7 @@ import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { environment } from '../environments/environment';
 
 import { routes } from './app.routes';
+import { provideIonicAngular } from '@ionic/angular/standalone';
 
 export const socketConfig: SocketIoConfig = {
   url: environment.backendUrl,
@@ -12,6 +13,6 @@ export const socketConfig: SocketIoConfig = {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    importProvidersFrom(SocketIoModule.forRoot(socketConfig))
+    importProvidersFrom(SocketIoModule.forRoot(socketConfig)), provideIonicAngular({})
   ],
 };

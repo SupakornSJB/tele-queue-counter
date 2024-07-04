@@ -11,7 +11,7 @@ describe('ServerComponent', () => {
       imports: [ServerComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(ServerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

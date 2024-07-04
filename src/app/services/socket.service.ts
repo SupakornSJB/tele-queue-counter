@@ -12,7 +12,7 @@ export class SocketService {
     this.isReady.next(false);
     socket.on("connect", () => {
       this.isReady.next(true);
-      console.log("Hello Socket")
+      console.log("Hello, Socket")
     });
   }
 }

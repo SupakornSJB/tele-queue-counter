@@ -1,8 +1,13 @@
 <div class="border border-white h-full">
   <div class="flex justify-between navbar bg-neutral-content h-[12.5%]">
-    <button class="btn btn-error" (click)="saveServer()">
-      -
-    </button>
+    <details class="dropdown">
+      <summary class="btn bg-neutral-content border-0">
+        <ion-icon name="ellipsis-vertical text-black"></ion-icon>
+      </summary>
+      <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+        <li (click)="showModal()"><a>Save and Delete Server</a></li>
+      </ul>
+    </details>
     <div class="flex flex-col">
       <p class="font-bold text-primary-content text-xl">
         {{server.name}}
@@ -21,3 +26,15 @@
     }
   </div>
 </div>
+<dialog [id]="server.id" class="modal">
+  <div class="modal-box">
+    <h3 class="font-bold text-lg">Save and Delete Server?</h3>
+    <p class="py-4">Are you sure you want to delete and save the server?</p>
+    <div class="modal-action">
+      <form method="dialog">
+        <button class="btn btn-error">No</button>
+        <button class="btn btn-primary" (click)="saveServer()">Yes</button>
+      </form>
+    </div>
+  </div>
+</dialog>

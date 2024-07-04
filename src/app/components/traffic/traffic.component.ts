@@ -19,17 +19,14 @@ export class TrafficComponent {
   constructor(private trafficService: TrafficService) { }
 
   deleteTraffic() {
-    console.log("delete");
     this.trafficService.deleteTraffic({ id: this.traffic.id, serverId: this.traffic.serverId });
   }
 
   saveAndDeleteTraffic() {
-    console.log("save");
     this.trafficService.saveAndDelete({ id: this.traffic.id, serverId: this.traffic.serverId })
   }
 
   updateTraffic() {
-    console.log("update");
     this.trafficService.updateTraffic( {id: this.traffic.id, serverId: this.traffic.serverId });
   }
 }
