@@ -1,18 +1,18 @@
-<div class="border border-white h-full">
-  <div class="flex justify-between navbar bg-neutral-content h-[12.5%]">
-    <details class="dropdown">
-      <summary class="btn bg-neutral-content border-0">
-        <ion-icon name="ellipsis-vertical text-black"></ion-icon>
-      </summary>
-      <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
-        <li (click)="showModal()"><a>Save and Delete Server</a></li>
-      </ul>
-    </details>
-    <div class="flex flex-col">
+<div class="border border-neutral h-full rounded-xl">
+  <div class="flex justify-between navbar bg-base-content p-3 w-full">
+    <!-- <details class="dropdown"> -->
+    <!--   <summary class="btn bg-neutral-content border-0"> -->
+    <!--     <ion-icon name="ellipsis-vertical text-black"></ion-icon> -->
+    <!--   </summary> -->
+    <!--   <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52"> -->
+    <!--     <li (click)="showModal()"><a>Save and Delete Server</a></li> -->
+    <!--   </ul> -->
+    <!-- </details> -->
+    <div class="flex flex-col items-start">
       <p class="font-bold text-primary-content text-xl">
         {{server.name}}
       </p>
-      <p class="font-thin text-primary-content text-xs">
+      <p class="text-primary-content text-xs">
         Created At: {{server.startTime | date:'full' }}
       </p>
     </div>

@@ -1,13 +1,13 @@
-<div class="flex flex-col justify-center items-center rounded bg-neutral-50 flex-none"
+<div class="flex flex-col gap-2 justify-center items-center rounded-xl flex-none p-4 border"
   [ngClass]="{
   'opacity-50': !traffic.owner.isOwner,
-  'bg-red-400': traffic.isWaiting
+  'border-red-400': traffic.isWaiting,
   }">
-  <p class="font-thin text-2xl">#{{traffic.id}}</p>
-  <p class="font-thin">{{traffic.startTime | date:'HH:mm'}}</p>
-  <div class="flex gap-2 p-2">
+  <p class="font-bold text-2xl text-white">#{{traffic.id}}</p>
+  <p class="font-thin text-white">{{traffic.startTime | date:'HH:mm'}}</p>
+  <div class="flex gap-1">
     @if (traffic.isWaiting) {
-    <button class="btn btn-info btn-sm" (click)="updateTraffic()">
+    <button class="btn btn-primary btn-sm" (click)="updateTraffic()">
       O
     </button>
     }

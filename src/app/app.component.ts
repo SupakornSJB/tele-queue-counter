@@ -34,6 +34,7 @@ export class AppComponent {
   showCreateServerModal() {
     const modal = document.getElementById("main_modal") as HTMLDialogElement;
     this.isCreatingUser = false;
+    this.modalInput = "";
     this.modalTitle = "Create New Server";
     this.modalDescription = "Please Enter the Name for the New Server";
     this.modalButtonText = "Create Server";
@@ -46,6 +47,7 @@ export class AppComponent {
   showCreateUserModal() {
     const modal = document.getElementById("main_modal") as HTMLDialogElement;
     this.isCreatingUser = true;
+    this.modalInput = "";
     this.modalTitle = "Create User";
     this.modalDescription = "Please Enter Your Name";
     this.modalButtonText = "Confirm";
