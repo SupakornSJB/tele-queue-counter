@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Pipe } from '@angular/core';
 import { Socket } from "ngx-socket-io";
 import { Subject } from "rxjs";
 

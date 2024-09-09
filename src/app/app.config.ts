@@ -6,8 +6,16 @@ import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 import { provideIonicAngular } from '@ionic/angular/standalone';
 
+const ACCESS_TOKEN_KEY = "access_token"
+
 export const socketConfig: SocketIoConfig = {
   url: environment.backendUrl,
+  options: {
+    autoConnect: false,
+    auth: {
+      'Bearer': localStorage.getItem(ACCESS_TOKEN_KEY)
+    }
+  }
 }
 
 export const appConfig: ApplicationConfig = {

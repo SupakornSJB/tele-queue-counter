@@ -8,8 +8,7 @@ import { CreateUserRequest } from '../interfaces/user';
 export class UserService {
   constructor(
     private socketService: SocketService,
-  ) {
-  }
+  ) { }
 
   createUser(info: CreateUserRequest) {
     this.socketService.socket.emit("user:auth", info, () => this.syncAll());
