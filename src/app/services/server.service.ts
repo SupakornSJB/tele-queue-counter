@@ -1,40 +1,39 @@
 import { Injectable } from '@angular/core';
 import { SocketService } from './socket.service';
-import { CreateServerBroadcastResponse, CreateServerRequest, DeleteServerBroadcaseResponse, DeleteServerRequest, IServer, SaveAndDeleteServerRequest } from '../interfaces/server';
 import { BehaviorSubject } from 'rxjs';
-import { SyncAllDataResponse } from '../interfaces/user';
+import { CreateServerDTO, PublicServerDTO, ServerIdDTO } from '../dto/server';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServerService {
-  private _servers: Map<string, Omit<IServer, "id">> = new Map();
-  public servers: BehaviorSubject<IServer[]> = new BehaviorSubject<IServer[]>([]);
+  private _servers: Map<string, Omit<PublicServerDTO, "id">> = new Map();
+  public servers: BehaviorSubject<PublicServerDTO[]> = new BehaviorSubject<PublicServerDTO[]>([]);
 
   constructor(private socketService: SocketService) {
-    this.socketService.socket.on("server:create", (info: CreateServerBroadcastResponse) => this.onCreateServer(info));
-    this.socketService.socket.on("server:delete", (info: DeleteServerBroadcaseResponse) => this.onDeleteServer(info));
+    this.socketService.socket.on("server:create", (info: CreateServerDTO) => this.onCreateServer(info));
+    this.socketService.socket.on("server:delete", (info: ServerIdDTO) => this.onDeleteServer(info));
     this.socketService.socket.on("sync-all", (info: SyncAllDataResponse) => this.onSync(info));
   }
 
-  createServer(info: CreateServerRequest) {
+  createServer(info: CreateServerDTO) {
     this.socketService.socket.emit("server:create", info);
   }
 
-  deleteServer(info: DeleteServerRequest) {
+  deleteServer(info: ServerIdDTO) {
     this.socketService.socket.emit("server:delete", info);
   }
 
-  saveAndDelete(info: SaveAndDeleteServerRequest) {
+  saveAndDelete(info: ServerIdDTO) {
     this.socketService.socket.emit("server:save-and-delete", info)
   }
 
-  onCreateServer(info: CreateServerBroadcastResponse) {
+  onCreateServer(info: CreateServerDTO) {
     this._servers.set(info.id, { name: info.name, startTime: info.startTime });
     this.servers.next(this.convertServerToArray());
   }
 
-  onDeleteServer(info: DeleteServerBroadcaseResponse) {
+  onDeleteServer(info: ServerIdDTO) {
     this._servers.delete(info.id);
     this.servers.next(this.convertServerToArray());
   }
@@ -48,8 +47,8 @@ export class ServerService {
     return Array.from(this._servers.entries()).map((entry) => { return { id: entry[0], ...entry[1] } })
   }
 
-  private convertArrayToServer(serverList: IServer[]) {
-    const newMap: Map<string, Omit<IServer, "id">> = new Map()
+  private convertArrayToServer(serverList: PublicServerDTO[]) {
+    const newMap: Map<string, Omit<PublicServerDTO, "id">> = new Map()
     serverList.forEach((server => {
       return newMap.set(server.id, { name: server.name, startTime: server.startTime })
     }))

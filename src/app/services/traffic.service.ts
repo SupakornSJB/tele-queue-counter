@@ -1,17 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SocketService } from './socket.service';
-import {
-  CreateTrafficBroadcastResponse,
-  CreateTrafficRequest,
-  DeleteTrafficBroadcastResponse,
-  DeleteTrafficRequest,
-  ITrafficPublic,
-  SaveAndDeleteTrafficRequest,
-  UpdateTrafficBroadcastResponse,
-  UpdateTrafficRequest
-} from '../interfaces/traffic';
 import { BehaviorSubject } from 'rxjs';
-import { SyncAllDataResponse } from '../interfaces/user';
 
 @Injectable({
   providedIn: 'root'
