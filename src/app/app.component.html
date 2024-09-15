@@ -8,14 +8,14 @@
     </button>
   </nav>
   <div class="h-full bg-neutral flex gap-2 p-2">
-    @for (server of this.serverService.servers | async; track server.id) {
+    @for (server of this.serverService.servers ; track server.id) {
     <div class="border border-white h-full rounded-xl" [ngClass]="{
-      'basis-full': this.serverService.servers.value.length==1,
-      'basis-1/2' : this.serverService.servers.value.length==2,
-      'basis-1/3' : this.serverService.servers.value.length==3,
-      'basis-1/4' : this.serverService.servers.value.length==4,
-      'basis-1/5' : this.serverService.servers.value.length==5,
-      'basis-1/6' : this.serverService.servers.value.length==6,
+      'basis-full': this.serverService.servers.length==1,
+      'basis-1/2' : this.serverService.servers.length==2,
+      'basis-1/3' : this.serverService.servers.length==3,
+      'basis-1/4' : this.serverService.servers.length==4,
+      'basis-1/5' : this.serverService.servers.length==5,
+      'basis-1/6' : this.serverService.servers.length==6,
       }">
       <app-server [server]="server"></app-server>
     </div>

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { ITrafficPublic } from '../../interfaces/traffic';
 import { TrafficService } from '../../services/traffic.service';
+import { TrafficDTOIncludeOwnership } from '../../dto/traffic';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -12,21 +12,21 @@ import { CommonModule } from '@angular/common';
   styleUrl: './traffic.component.scss'
 })
 export class TrafficComponent {
-  @Input() traffic: ITrafficPublic;
+  @Input() traffic: TrafficDTOIncludeOwnership;
   isEditing: boolean = false;
   note: string = "";
 
   constructor(private trafficService: TrafficService) { }
 
   deleteTraffic() {
-    this.trafficService.deleteTraffic({ id: this.traffic.id, serverId: this.traffic.serverId });
+    this.trafficService.deleteTraffic({ id: this.traffic.id });
   }
 
-  saveAndDeleteTraffic() {
-    this.trafficService.saveAndDelete({ id: this.traffic.id, serverId: this.traffic.serverId })
+  beginService() {
+    this.trafficService.beginServiceOnTraffic({ id: this.traffic.id })
   }
 
-  updateTraffic() {
-    this.trafficService.updateTraffic( {id: this.traffic.id, serverId: this.traffic.serverId });
+  endService() {
+    this.trafficService.endServiceOnTraffic({ id: this.traffic.id })
   }
 }

@@ -1,40 +1,21 @@
-import { SERVER_EVENT_ENUM, ServerDocument } from "src/schemas/server.schema";
-import { BaseDTO } from "./base";
-
-export class CreateServerDTO extends BaseDTO {
-  readonly name: string;
-}
-
-export class ServerEventDTO extends BaseDTO {
-  readonly id: string;
-  readonly eventName: SERVER_EVENT_ENUM;
-}
-
-export class ServerIdDTO extends BaseDTO {
+export class ServerIdDTO {
   readonly id: string;
 
-  constructor(server: Partial<ServerDocument>) {
-    super();
-    this.id = server.id
+  constructor(id: string) {
+    this.id = id;
   }
 }
 
-export class ServerDTO extends BaseDTO {
-  readonly id: string;
+export class CreateServerDTO extends ServerIdDTO {
   readonly name: string;
 
-  constructor(server: ServerDocument) {
-    super();
-    this.id = server.id;
-    this.name = server.name;
+  constructor(id: string, name: string) {
+    super(id);
+    this.name = name;
   }
 }
 
-export class PublicServerDTO extends ServerDTO {
+export class PublicServerDTO extends CreateServerDTO {
+  readonly creationTime: Date;
   readonly isActive: boolean;
-
-  constructor(server: ServerDocument, isActive: boolean) {
-    super(server);
-    this.isActive = isActive;
-  }
 }

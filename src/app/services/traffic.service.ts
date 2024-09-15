@@ -1,72 +1,69 @@
 import { Injectable } from '@angular/core';
 import { SocketService } from './socket.service';
-import { BehaviorSubject } from 'rxjs';
+import { CreateTrafficDTO, TrafficDTOIncludeOwnership, TrafficIdDTO } from '../dto/traffic';
+import { SyncAllResponse } from '../dto/base';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TrafficService {
-  private _traffics: Map<string, Omit<ITrafficPublic, "id">> = new Map();
-  public traffics: BehaviorSubject<ITrafficPublic[]> = new BehaviorSubject<ITrafficPublic[]>([]);
+  private _traffics: Map<string, TrafficDTOIncludeOwnership> = new Map();
 
   constructor(private socketService: SocketService) {
-    this.socketService.socket.on("traffic:create", (p: ITrafficPublic) => this.onCreateTraffic(p));
-    this.socketService.socket.on("traffic:delete", (p: DeleteTrafficBroadcastResponse) => this.onDeleteTraffic(p));
-    this.socketService.socket.on("traffic:update", (p: UpdateTrafficBroadcastResponse) => this.onUpdateTraffic(p));
-    this.socketService.socket.on("sync-all", (p: SyncAllDataResponse) => this.onSync(p));
+    this.socketService.socket.on("traffic:create", (p: TrafficDTOIncludeOwnership) => this.onCreateTraffic(p));
+    this.socketService.socket.on("traffic:begin-service", (p: TrafficIdDTO) => this.onTrafficBeginService(p));
+    this.socketService.socket.on("traffic:end-service", (p: TrafficIdDTO) => this.onTrafficEndService(p));
+    this.socketService.socket.on("traffic:deleted", (p: TrafficIdDTO) => this.onDeleteTraffic(p));
+    this.socketService.socket.on("sync-all", (p: SyncAllResponse) => this.onSync(p));
   }
 
-  createTraffic(info: CreateTrafficRequest) {
+  get traffics() {
+    return this.convertTrafficMapToArray(this._traffics);
+  }
+
+  createTraffic(info: CreateTrafficDTO) {
     this.socketService.socket.emit("traffic:create", info);
   }
 
-  deleteTraffic(info: DeleteTrafficRequest) {
+  deleteTraffic(info: TrafficIdDTO) {
     this.socketService.socket.emit("traffic:delete", info)
   }
 
-  saveAndDelete(info: SaveAndDeleteTrafficRequest) {
-    this.socketService.socket.emit("traffic:save-and-delete", info);
+  beginServiceOnTraffic(info: TrafficIdDTO) {
+    this.socketService.socket.emit("traffic:begin-service", info);
   }
 
-  updateTraffic(info: UpdateTrafficRequest) {
-    this.socketService.socket.emit("traffic:update", info);
+  endServiceOnTraffic(info: TrafficIdDTO) {
+    this.socketService.socket.emit("traffic:end-service", info);
   }
 
-  onCreateTraffic(info: CreateTrafficBroadcastResponse) {
-    this._traffics.set(info.id, {
-      startTime: info.startTime,
-      serverId: info.serverId,
-      note: info.note,
-      owner: info.owner,
-      isWaiting: info.isWaiting,
-    })
-    this.traffics.next(this.convertTrafficToArray());
+  onCreateTraffic(info: TrafficDTOIncludeOwnership) {
+    this._traffics.set(info.id, info);
   }
 
-  onDeleteTraffic(info: DeleteTrafficBroadcastResponse) {
+  onDeleteTraffic(info: TrafficIdDTO) {
     this._traffics.delete(info.id);
-    this.traffics.next(this.convertTrafficToArray());
   }
 
-  onUpdateTraffic(info: UpdateTrafficBroadcastResponse) {
-    this._traffics.set(info.change.id, info.change);
-    this.traffics.next(this.convertTrafficToArray());
+  onTrafficEndService(info: TrafficIdDTO) {
+    this.onDeleteTraffic(info);
   }
 
-  onSync(info: SyncAllDataResponse) {
-    this._traffics = this.convertArrayToTraffic(info.traffics);
-    this.traffics.next(info.traffics);
+  onTrafficBeginService(info: TrafficIdDTO) {
+    const traffic = this._traffics.get(info.id);
+    if (!traffic) throw new Error("Traffic Not Found");
+    const trafficCopy = { ...traffic };
+    trafficCopy.isWaiting = false;
+    this._traffics.set(info.id, trafficCopy);
   }
 
-  private convertTrafficToArray() {
-    return Array.from(this._traffics.entries()).map((entry) => { return { id: entry[0], ...entry[1] } })
-  }
-
-  private convertArrayToTraffic(trafficList: ITrafficPublic[]) {
-    const newMap: Map<string, Omit<ITrafficPublic, "id">> = new Map()
-    trafficList.forEach((traffic) => {
-      newMap.set(traffic.id, { serverId: traffic.serverId, startTime: traffic.startTime, note: traffic.note, owner: traffic.owner, isWaiting: traffic.isWaiting })
+  onSync(info: SyncAllResponse) {
+    info.traffics.forEach((server) => {
+      this._traffics.set(server.id, server);
     })
-    return newMap;
+  }
+
+  private convertTrafficMapToArray(traffics: Map<string, TrafficDTOIncludeOwnership>) {
+    return Array.from(traffics.values());
   }
 }

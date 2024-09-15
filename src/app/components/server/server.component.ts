@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { IServer } from '../../interfaces/server';
 import { Input } from "@angular/core";
 import { TrafficService } from '../../services/traffic.service';
-import { ITrafficPublic } from '../../interfaces/traffic';
 import { TrafficComponent } from '../traffic/traffic.component';
 import { DatePipe } from '@angular/common';
 import { ServerService } from '../../services/server.service';
 import { IonicModule } from '@ionic/angular';
 import { ellipsisVertical } from "ionicons/icons";
 import { addIcons } from "ionicons";
+import { PublicServerDTO } from '../../dto/server';
+import { TrafficDTOIncludeOwnership } from '../../dto/traffic';
 
 @Component({
   selector: 'app-server',
@@ -18,8 +18,8 @@ import { addIcons } from "ionicons";
   styleUrl: './server.component.scss'
 })
 export class ServerComponent implements OnInit {
-  @Input() server: IServer;
-  public trafficLists: ITrafficPublic[] = [];
+  @Input() server: PublicServerDTO;
+  public trafficLists: TrafficDTOIncludeOwnership[] = [];
 
   constructor(public trafficService: TrafficService, public serverService: ServerService) {
     addIcons({ ellipsisVertical });
@@ -29,15 +29,15 @@ export class ServerComponent implements OnInit {
     this.trafficService.traffics.subscribe((info) => this.populateTraffic(info));
   }
 
-  partition(array: ITrafficPublic[], isValid: (traf: ITrafficPublic) => boolean) {
-    return array.reduce<ITrafficPublic[][]>(([pass, fail], elem) => {
+  partition(array: TrafficDTOIncludeOwnership[], isValid: (traf: TrafficDTOIncludeOwnership) => boolean) {
+    return array.reduce<TrafficDTOIncludeOwnership[][]>(([pass, fail], elem) => {
       return isValid(elem) ? [[...pass, elem], fail] : [pass, [...fail, elem]];
     }, [[], []]);
   }
 
-  populateTraffic(list: ITrafficPublic[]) {
-    const firstList = list.filter((traffic) => traffic.serverId === this.server.id);
-    const [priority, nonPriority] = this.partition(firstList, (traffic) => traffic.owner.isOwner);
+  populateTraffic(list: TrafficDTOIncludeOwnership[]) {
+    const firstList = list.filter((traffic) => traffic.id === this.server.id);
+    const [priority, nonPriority] = this.partition(firstList, (traffic) => traffic.isOwner);
     this.trafficLists = priority;
     this.trafficLists.push(...nonPriority);
   }

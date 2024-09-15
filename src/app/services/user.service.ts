@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SocketService } from './socket.service';
-import { CreateUserRequest } from '../interfaces/user';
+import { UserDTO } from '../dto/user';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,7 @@ export class UserService {
     private socketService: SocketService,
   ) { }
 
-  createUser(info: CreateUserRequest) {
+  createUser(info: UserDTO) {
     this.socketService.socket.emit("user:auth", info, () => this.syncAll());
   }
 
